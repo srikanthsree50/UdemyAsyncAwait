@@ -1,0 +1,23 @@
+{
+  "name": "asyncawait",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start":"nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srikanthsree50/UdemyAsyncAwait.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srikanthsree50/UdemyAsyncAwait/issues"
+  },
+  "homepage": "https://github.com/srikanthsree50/UdemyAsyncAwait#readme",
+  "dependencies": {
+    "nodemon": "^1.17.5"
+  }
+}
