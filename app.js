@@ -1,69 +1,70 @@
-const users = [{
-id:1,
-name:'srikanth',
-schoolId:561
-},
-{
-    id:2,
-    name:'srilatha',
-    schoolId:562
-    }];
+// http://data.fixer.io/api/latest?access_key=50e7c4e1b8bc6d5dd2b4bc554ea64c58
 
-    const grades = [{
-        id:1,
-        schoolId:561,
-        grade:100
-    },{
-        id:2,
-        schoolId:562,
-        grade:10
-    },{
-        id:3,
-        schoolId:561,
-        grade:90
-    }];
+const axios =require('axios');
 
-    const getUser = (id) => {
-return new Promise((resolve,reject) => {
-    const user = users.find((user) => user.id === id);
-    if(user){
-resolve(user);
-    }
-    else{
-        reject(`unable to fetch user with id of ${id}`);
-    }
-});
-    };
+const getExchangeRate = async (from,to) => {
+    try{
 
-    getUser(1).then((user) => {
-        console.log(user);
-    }).catch((e) => {
-        console.log(e);
-    })
+        const response = await axios.get('http://data.fixer.io/api/latest?access_key=50e7c4e1b8bc6d5dd2b4bc554ea64c58');
+        const euro = 1/response.data.rates[from];
+        const rate = euro * response.data.rates[to];
 
-    const getGrades = (schoolId) => {
-        return new Promise((resolve,reject) => {
-            resolve(grades.filter((grade) => grade.schoolId === schoolId));
-        });
-            };
-const getStatus = (userId) => {
-    let user;
-    return getUser(userId).then((tempuser) => {
-        user = tempuser;
-        return getGrades(user.schoolId);
-    }).then((grades) => {
-        let average = 0 ;
-
-        if(grades.length > 0){
-average = grades.map((grade) => grade.grade).reduce((a,b) => a + b)/grades.length;
+        if(isNaN(rate))
+        {
+     throw new Error();
         }
-        return `${user.name} has a ${average}% in the class.`;
+        return rate;
+    }
+    catch(e)
+    {
+throw new Error(`unable to fetch exchange rate for ${from} and ${to}`)
+    }
+     
+ };
+
+const getCountries = async (currencyCode) => {
+    const response = await axios.get(`https://restcountries.eu/rest/v2/currency/${currencyCode}`);
+    return response.data.map((country) => country.name);
+};
+
+
+const convertCurrency = async (from,to,amount) => {
+    try{
+  
+        const rate = await getExchangeRate(from,to)
+        const countries = await getCountries(to)
+       const convertedAmount =  (rate * amount).toFixed(2);
       
-    })
+      return `${amount} ${from} is worth ${convertedAmount} ${to}. you can spend it in following countries : ${countries.join(', ')}` ;
+    }
+    catch(e)
+    {
+        throw new Error(`unable to fetch currency  for countries that use  ${currencyCode}`)
+    }
+  
+  
+};
+
+convertCurrency('USD','INR',100).then((message) => {
+console.log(message);
+}).catch((e) => {
+    console.log(e.message);
+});
+
+//-----------------------------------------------------------------------------
+const add = async (a,b) => a + b
+
+const doWork = async () => {
+try {
+const result = add(10,12);
+return result;
 }
-            
-    getStatus(2).then((status) => {
-        console.log(status);
+catch(e){
+
+}
+}
+doWork().then((data) => {
+     console.log(data);
     }).catch((e) => {
-        console.log(e);
+        console.log('something went wrong');
     })
